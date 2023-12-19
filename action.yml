@@ -1,23 +1,70 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'git-diff-action'
+description: 'Determine the files and their type that changed between two branches.'
+author: 'Christopher Roemheld'
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
-  icon: 'heart'
-  color: 'red'
+  icon: 'git-pull-request'
+  color: 'gray-dark'
 
 # Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
+  base:
+    description: 'The base branch to compare against'
     required: true
-    default: '1000'
+    default: 'main'
+  comp:
+    description: 'The feature branch to show the changes in'
+    required: true
+  glob:
+    description: 'The files to match from the diff'
+    required: true
+    default: '*'
+  type:
+    description: 'The type of the change to search'
+    required: true
+    default: 'A|C|D|M|R|T|U|X|B'
 
 # Define your outputs here.
 outputs:
-  time:
-    description: 'Your output description here'
+  size:
+    description: 'The number of matches for the specified input'
+  added_count:
+    description: 'The number of files that were added'
+  added_files:
+    description: 'The files that were added'
+  copied_count:
+    description: 'The number of files that were copied'
+  copied_files:
+    description: 'The files that were copied'
+  deleted_count:
+    description: 'The number of files that were deleted'
+  deleted_files:
+    description: 'The files that were deleted'
+  modified_count:
+    description: 'The number of files that were modified'
+  modified_files:
+    description: 'The files that were modified'
+  renamed_count:
+    description: 'The number of files that were renamed'
+  renamed_files:
+    description: 'The files that were renamed'
+  type_changed_count:
+    description: 'The number of files that changed their type'
+  type_changed_files:
+    description: 'The files that changed their type'
+  unmerged_count:
+    description: 'The number of files that were unmerged'
+  unmerged_files:
+    description: 'The files that were unmerged'
+  unknown_count:
+    description: 'The number of files that were unknown'
+  unknown_files:
+    description: 'The files that were unknown'
+  broken_count:
+    description: 'The number of files that were broken'
+  broken_files:
+    description: 'The files that were broken'
 
 runs:
   using: node20
