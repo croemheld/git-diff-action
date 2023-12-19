@@ -8,15 +8,12 @@
 
 import * as core from '@actions/core'
 import * as main from '../src/main'
+import * as diff from '../src/git'
 
 // Mock the action's main function
 const runMock = jest.spyOn(main, 'run')
 
-// Other utilities
-const timeRegex = /^\d{2}:\d{2}:\d{2}/
-
 // Mock the GitHub Actions core library
-let debugMock: jest.SpyInstance
 let errorMock: jest.SpyInstance
 let getInputMock: jest.SpyInstance
 let setFailedMock: jest.SpyInstance
@@ -26,54 +23,99 @@ describe('action', () => {
   beforeEach(() => {
     jest.clearAllMocks()
 
-    debugMock = jest.spyOn(core, 'debug').mockImplementation()
+    // First: All main function functions thar are tested here from "@core"
     errorMock = jest.spyOn(core, 'error').mockImplementation()
     getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
     setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
     setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
   })
 
-  it('sets the time output', async () => {
+  it('Sets the action inputs correctly', async () => {
     // Set the action's inputs as return values from core.getInput()
     getInputMock.mockImplementation((name: string): string => {
       switch (name) {
-        case 'milliseconds':
-          return '500'
+        case 'base':
+          return 'main'
+        case 'comp':
+          return 'comp'
+        case 'glob':
+          return 'file1'
+        case 'type':
+          return 'A|C|D|M|R|T|U|X|B'
         default:
           return ''
       }
     })
 
+    const getNormalGitDiff = new Map<string, string>([
+      ['file1', 'M'],
+      ['file2', 'M']
+    ])
+    jest.spyOn(diff, 'runGitDiff').mockReturnValueOnce(getNormalGitDiff)
+
     await main.run()
     expect(runMock).toHaveReturned()
 
     // Verify that all of the core library functions were called correctly
-    expect(debugMock).toHaveBeenNthCalledWith(1, 'Waiting 500 milliseconds ...')
-    expect(debugMock).toHaveBeenNthCalledWith(
-      2,
-      expect.stringMatching(timeRegex)
-    )
-    expect(debugMock).toHaveBeenNthCalledWith(
-      3,
-      expect.stringMatching(timeRegex)
-    )
-    expect(setOutputMock).toHaveBeenNthCalledWith(
-      1,
-      'time',
-      expect.stringMatching(timeRegex)
-    )
+    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'count', 1)
+    expect(setOutputMock).toHaveBeenNthCalledWith(2, 'modified_count', 1)
+    expect(setOutputMock).toHaveBeenNthCalledWith(3, 'modified_files', [
+      'file1'
+    ])
     expect(errorMock).not.toHaveBeenCalled()
   })
 
-  it('sets a failed status', async () => {
+  it('Sets an invalid filter character', async () => {
     // Set the action's inputs as return values from core.getInput()
     getInputMock.mockImplementation((name: string): string => {
       switch (name) {
-        case 'milliseconds':
-          return 'this is not a number'
+        case 'base':
+          return 'main'
+        case 'comp':
+          return 'comp'
+        case 'glob':
+          return 'file1'
+        case 'type':
+          return '?'
         default:
           return ''
       }
+    })
+
+    const getNormalGitDiff = new Map<string, string>([
+      ['file1', 'M'],
+      ['file2', 'M']
+    ])
+    jest.spyOn(diff, 'runGitDiff').mockReturnValueOnce(getNormalGitDiff)
+
+    await main.run()
+    expect(runMock).toHaveReturned()
+
+    // Verify that all of the core library functions were called correctly
+    expect(setFailedMock).toHaveBeenNthCalledWith(1, 'Invalid type character')
+    expect(errorMock).not.toHaveBeenCalled()
+  })
+
+  it('Returns an error during the diff', async () => {
+    // Set the action's inputs as return values from core.getInput()
+    getInputMock.mockImplementation((name: string): string => {
+      switch (name) {
+        case 'base':
+          return 'main'
+        case 'comp':
+          return 'comp'
+        case 'glob':
+          return 'file1'
+        case 'type':
+          return 'M'
+        default:
+          return ''
+      }
+    })
+
+    const getFailedGitDiff = 'The specified branch does not exist'
+    jest.spyOn(diff, 'runGitDiff').mockImplementationOnce(() => {
+      throw new Error(getFailedGitDiff)
     })
 
     await main.run()
@@ -82,7 +124,7 @@ describe('action', () => {
     // Verify that all of the core library functions were called correctly
     expect(setFailedMock).toHaveBeenNthCalledWith(
       1,
-      'milliseconds not a number'
+      'The specified branch does not exist'
     )
     expect(errorMock).not.toHaveBeenCalled()
   })
