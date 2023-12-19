@@ -58,8 +58,8 @@ describe('action', () => {
 
     // Verify that all of the core library functions were called correctly
     expect(setOutputMock).toHaveBeenNthCalledWith(1, 'count', 1)
-    expect(setOutputMock).toHaveBeenNthCalledWith(2, 'modified_count', 1)
-    expect(setOutputMock).toHaveBeenNthCalledWith(3, 'modified_files', [
+    expect(setOutputMock).toHaveBeenNthCalledWith(8, 'modified_count', 1)
+    expect(setOutputMock).toHaveBeenNthCalledWith(9, 'modified_files', [
       'file1'
     ])
     expect(errorMock).not.toHaveBeenCalled()

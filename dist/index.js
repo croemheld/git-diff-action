@@ -4135,10 +4135,17 @@ async function run() {
         const typeMap = getTypeMap(charMap, typeStr);
         // Populate the output fields accordingly
         core.setOutput('count', typeMap.size);
-        [...typeMap.entries()].filter(([key, value]) => {
-            core.setOutput(`${charsMap.get(key)}_count`, value.length);
-            core.setOutput(`${charsMap.get(key)}_files`, value);
-        });
+        for (const entry of charsMap) {
+            const value = typeMap.get(entry[0]);
+            if (value) {
+                core.setOutput(`${entry[1]}_count`, value.length);
+                core.setOutput(`${entry[1]}_files`, value);
+            }
+            else {
+                core.setOutput(`${entry[1]}_count`, 0);
+                core.setOutput(`${entry[1]}_files`, []);
+            }
+        }
     }
     catch (error) {
         // Fail the workflow run if an error occurs
