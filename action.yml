@@ -27,7 +27,7 @@ inputs:
 
 # Define your outputs here.
 outputs:
-  size:
+  count:
     description: 'The number of matches for the specified input'
   added_count:
     description: 'The number of files that were added'
