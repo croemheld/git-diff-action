@@ -34,9 +34,7 @@ export function runGitDiff(
   baseStr: string,
   compStr: string
 ): Map<string, string> {
-  const args = `diff --name-status --merge-base ${baseStr} ${compStr}`.split(
-    ' '
-  )
-  const diff = runGitCommand(args)
+  const args = `diff --name-status --merge-base ${baseStr} ${compStr}`
+  const diff = runGitCommand(args.split(' '))
   return parseGitDiff(diff)
 }

@@ -31,5 +31,5 @@ steps:
 
   - name: List of modified files
     id: output
-    run: echo "${{ steps.test-action.outputs.modified_files }}"
+    run: echo "${{ steps.git-diff-action.outputs.modified_files }}"
 ```
