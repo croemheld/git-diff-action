@@ -4015,7 +4015,7 @@ exports.parseGitDiff = parseGitDiff;
  * @return {Map<string, string>} A map of file and their statuses, or an error
  */
 function runGitDiff(baseStr, compStr) {
-    const args = `diff --name-status ${baseStr} ${compStr}`;
+    const args = `diff --name-status ${compStr}..${baseStr}`;
     const diff = runGitCommand(args.split(' '));
     return parseGitDiff(diff);
 }
