@@ -1,3 +1,4 @@
+import semver from 'semver'
 import { spawnSync } from 'child_process'
 
 /**
@@ -34,7 +35,11 @@ export function runGitDiff(
   baseStr: string,
   compStr: string
 ): Map<string, string> {
-  const args = `diff --name-status ${compStr}..${baseStr}`
+  const version = runGitCommand(['--version']).split(' ')[2]
+  if (semver.gte(version, '2.39.0')) {
+    baseStr = runGitCommand(`merge-base ${baseStr} ${compStr}`.split(' '))
+  }
+  const args = `diff --name-status ${baseStr}..${compStr}`
   const diff = runGitCommand(args.split(' '))
   return parseGitDiff(diff)
 }

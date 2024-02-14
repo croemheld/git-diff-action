@@ -54,9 +54,16 @@ describe('git', () => {
     const getBaseCompDiff = ['M       file1', 'M       file2'].join('\n')
     const getBaseCompDiffMap = diff.parseGitDiff(getBaseCompDiff)
 
-    spawnSyncMock.mockImplementationOnce((): SpawnSyncReturnsMock => {
-      return SpawnSyncReturnsMock.asStdout(getBaseCompDiff)
-    })
+    spawnSyncMock
+      .mockImplementationOnce((): SpawnSyncReturnsMock => {
+        return SpawnSyncReturnsMock.asStdout('git version 2.43.0')
+      })
+      .mockImplementationOnce((): SpawnSyncReturnsMock => {
+        return SpawnSyncReturnsMock.asStdout('50m3c0mm17h45hv4lu3fr0mm3r63b453')
+      })
+      .mockImplementationOnce((): SpawnSyncReturnsMock => {
+        return SpawnSyncReturnsMock.asStdout(getBaseCompDiff)
+      })
 
     diff.runGitDiff('base', 'comp')
     expect(gitMock).toHaveReturned()

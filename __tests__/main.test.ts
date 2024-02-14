@@ -39,17 +39,20 @@ describe('action', () => {
         case 'comp':
           return 'comp'
         case 'glob':
-          return 'file1'
+          return '**/{dir1,dir2}/*'
         case 'type':
-          return 'A|C|D|M|R|T|U|X|B'
+          return 'M'
         default:
           return ''
       }
     })
 
     const getNormalGitDiff = new Map<string, string>([
-      ['file1', 'M'],
-      ['file2', 'M']
+      ['dir1/file1', 'M'],
+      ['dir2/file2', 'M'],
+      ['dir2/file3', 'M'],
+      ['file4', 'M'],
+      ['file5', 'M']
     ])
     jest.spyOn(diff, 'runGitDiff').mockReturnValueOnce(getNormalGitDiff)
 
@@ -57,11 +60,13 @@ describe('action', () => {
     expect(runMock).toHaveReturned()
 
     // Verify that all of the core library functions were called correctly
-    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'count', 1)
-    expect(setOutputMock).toHaveBeenNthCalledWith(8, 'modified_count', 1)
-    expect(setOutputMock).toHaveBeenNthCalledWith(9, 'modified_files', [
-      'file1'
+    expect(setOutputMock).toHaveBeenNthCalledWith(7, 'modified_count', 3)
+    expect(setOutputMock).toHaveBeenNthCalledWith(8, 'modified_files', [
+      'dir1/file1',
+      'dir2/file2',
+      'dir2/file3'
     ])
+    expect(setOutputMock).toHaveBeenNthCalledWith(19, 'count', 3)
     expect(errorMock).not.toHaveBeenCalled()
   })
 

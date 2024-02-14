@@ -100,10 +100,11 @@ export async function run(): Promise<void> {
     const typeMap = getTypeMap(charMap, typeStr)
 
     // Populate the output fields accordingly
-    core.setOutput('count', typeMap.size)
+    let totalCount = 0
     for (const entry of charsMap) {
       const value = typeMap.get(entry[0])
       if (value) {
+        totalCount += value.length
         core.setOutput(`${entry[1]}_count`, value.length)
         core.setOutput(`${entry[1]}_files`, value)
       } else {
@@ -111,6 +112,7 @@ export async function run(): Promise<void> {
         core.setOutput(`${entry[1]}_files`, [])
       }
     }
+    core.setOutput('count', totalCount)
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) {
