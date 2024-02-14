@@ -7286,7 +7286,6 @@ function parseGitDiff(diffStr) {
     const diffMap = new Map();
     const changes = diffStr.split('\n').filter(Boolean);
     for (const change of changes) {
-        console.log(`Parse change: ${change}...`);
         const result = change.split('\t');
         diffMap.set(result[1], result[0]);
     }
