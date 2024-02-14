@@ -7302,7 +7302,8 @@ function runGitDiff(baseStr, compStr) {
     if (semver_1.default.gte(version, '2.39.0')) {
         baseStr = runGitCommand(`merge-base ${baseStr} ${compStr}`.split(' '));
     }
-    const args = `diff --name-status ${baseStr}..${compStr}`;
+    const args = `diff --name-status ${baseStr} ${compStr}`;
+    console.log(`Run git command with: ${args}`);
     const diff = runGitCommand(args.split(' '));
     return parseGitDiff(diff);
 }
