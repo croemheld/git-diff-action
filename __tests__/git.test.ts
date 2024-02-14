@@ -51,7 +51,7 @@ describe('git', () => {
   })
 
   it('Get a diff of two branches', async () => {
-    const getBaseCompDiff = ['M\tfile1', 'M\tfile2'].join('\n')
+    const getBaseCompDiff = ['M\tfile1', 'M\tfile2\n'].join('\n')
     const getBaseCompDiffMap = diff.parseGitDiff(getBaseCompDiff)
 
     spawnSyncMock

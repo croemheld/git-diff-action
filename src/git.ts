@@ -18,8 +18,9 @@ export function runGitCommand(args: string[]): string {
 
 export function parseGitDiff(diffStr: string): Map<string, string> {
   const diffMap = new Map<string, string>()
-  const changes: string[] = diffStr.split('\n')
+  const changes: string[] = diffStr.split('\n').filter(Boolean)
   for (const change of changes) {
+    console.log(`Parse change: ${change}...`)
     const result = change.split('\t')
     diffMap.set(result[1], result[0])
   }
