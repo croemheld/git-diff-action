@@ -7286,7 +7286,8 @@ function parseGitDiff(diffStr) {
     const diffMap = new Map();
     const changes = diffStr.split('\n');
     for (const change of changes) {
-        diffMap.set(change.substring(8), change.charAt(0));
+        const result = change.split('\t');
+        diffMap.set(result[1], result[0]);
     }
     return diffMap;
 }
@@ -7303,7 +7304,7 @@ function runGitDiff(baseStr, compStr) {
         baseStr = runGitCommand(`merge-base ${baseStr} ${compStr}`.split(' ')).trim();
     }
     const args = `diff --name-status ${baseStr}..${compStr}`;
-    console.log(`Run git command with: ${args}...`);
+    console.log(`Run git command with: ${args}...\n`);
     const diff = runGitCommand(args.split(' '));
     console.log(diff);
     return parseGitDiff(diff);
