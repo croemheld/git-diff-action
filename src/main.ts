@@ -107,6 +107,10 @@ export async function run(): Promise<void> {
         totalCount += value.length
         core.setOutput(`${entry[1]}_count`, value.length)
         core.setOutput(`${entry[1]}_files`, value)
+        console.log(`Registered ${value.length} matches for ${entry[1]}_files:`)
+        for (const file of value) {
+          console.log(` -- ${file}`)
+        }
       } else {
         core.setOutput(`${entry[1]}_count`, 0)
         core.setOutput(`${entry[1]}_files`, [])
