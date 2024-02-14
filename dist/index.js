@@ -7303,8 +7303,9 @@ function runGitDiff(baseStr, compStr) {
         baseStr = runGitCommand(`merge-base ${baseStr} ${compStr}`.split(' ')).trim();
     }
     const args = `diff --name-status ${baseStr}..${compStr}`;
-    console.log(`Run git command with: ${args}`);
+    console.log(`Run git command with: ${args}...`);
     const diff = runGitCommand(args.split(' '));
+    console.log(diff);
     return parseGitDiff(diff);
 }
 exports.runGitDiff = runGitDiff;
