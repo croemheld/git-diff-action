@@ -117,6 +117,7 @@ export async function run(): Promise<void> {
       }
     }
     core.setOutput('count', totalCount)
+    console.log(`Registered a total of ${totalCount} matches for input.`)
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) {

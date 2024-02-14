@@ -7440,6 +7440,7 @@ async function run() {
             }
         }
         core.setOutput('count', totalCount);
+        console.log(`Registered a total of ${totalCount} matches for input.`);
     }
     catch (error) {
         // Fail the workflow run if an error occurs
