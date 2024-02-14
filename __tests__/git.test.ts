@@ -56,10 +56,12 @@ describe('git', () => {
 
     spawnSyncMock
       .mockImplementationOnce((): SpawnSyncReturnsMock => {
-        return SpawnSyncReturnsMock.asStdout('git version 2.43.0')
+        return SpawnSyncReturnsMock.asStdout('git version 2.43.0\n')
       })
       .mockImplementationOnce((): SpawnSyncReturnsMock => {
-        return SpawnSyncReturnsMock.asStdout('50m3c0mm17h45hv4lu3fr0mm3r63b453')
+        return SpawnSyncReturnsMock.asStdout(
+          '50m3c0mm17h45hv4lu3fr0mm3r63b453\n'
+        )
       })
       .mockImplementationOnce((): SpawnSyncReturnsMock => {
         return SpawnSyncReturnsMock.asStdout(getBaseCompDiff)

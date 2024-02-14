@@ -37,9 +37,11 @@ export function runGitDiff(
 ): Map<string, string> {
   const version = runGitCommand(['--version']).split(' ')[2]
   if (semver.gte(version, '2.39.0')) {
-    baseStr = runGitCommand(`merge-base ${baseStr} ${compStr}`.split(' '))
+    baseStr = runGitCommand(
+      `merge-base ${baseStr} ${compStr}`.split(' ')
+    ).trim()
   }
-  const args = `diff --name-status ${baseStr} ${compStr}`
+  const args = `diff --name-status ${baseStr}..${compStr}`
   console.log(`Run git command with: ${args}`)
   const diff = runGitCommand(args.split(' '))
   return parseGitDiff(diff)
